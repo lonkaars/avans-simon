@@ -1,0 +1,352 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L power:GND #PWR?
+U 1 1 617FA64B
+P 650 2000
+F 0 "#PWR?" H 650 1750 50  0001 C CNN
+F 1 "GND" H 655 1827 50  0000 C CNN
+F 2 "" H 650 2000 50  0001 C CNN
+F 3 "" H 650 2000 50  0001 C CNN
+	1    650  2000
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 617FAA56
+P 2050 750
+F 0 "#PWR?" H 2050 600 50  0001 C CNN
+F 1 "VCC" H 2065 923 50  0000 C CNN
+F 2 "" H 2050 750 50  0001 C CNN
+F 3 "" H 2050 750 50  0001 C CNN
+	1    2050 750 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push SW0
+U 1 1 617FE5CA
+P 950 850
+F 0 "SW0" H 950 1135 50  0000 C CNN
+F 1 "SW_RED" H 950 1044 50  0000 C CNN
+F 2 "" H 950 1050 50  0001 C CNN
+F 3 "~" H 950 1050 50  0001 C CNN
+	1    950  850 
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push SW1
+U 1 1 618004CA
+P 950 1200
+F 0 "SW1" H 950 1485 50  0000 C CNN
+F 1 "SW_YELLOW" H 950 1394 50  0000 C CNN
+F 2 "" H 950 1400 50  0001 C CNN
+F 3 "~" H 950 1400 50  0001 C CNN
+	1    950  1200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push SW2
+U 1 1 61801321
+P 950 1550
+F 0 "SW2" H 950 1835 50  0000 C CNN
+F 1 "SW_GREEN" H 950 1744 50  0000 C CNN
+F 2 "" H 950 1750 50  0001 C CNN
+F 3 "~" H 950 1750 50  0001 C CNN
+	1    950  1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push SW3
+U 1 1 61801689
+P 950 1900
+F 0 "SW3" H 950 2185 50  0000 C CNN
+F 1 "SW_BLUE" H 950 2094 50  0000 C CNN
+F 2 "" H 950 2100 50  0001 C CNN
+F 3 "~" H 950 2100 50  0001 C CNN
+	1    950  1900
+	1    0    0    -1  
+$EndComp
+Text GLabel 1300 750  2    50   Input ~ 0
+ARD_D0
+Text GLabel 1300 1100 2    50   Input ~ 0
+ARD_D1
+Text GLabel 1300 1450 2    50   Input ~ 0
+ARD_D2
+Wire Wire Line
+	750  850  650  850 
+Wire Wire Line
+	750  1200 650  1200
+Wire Wire Line
+	750  1550 650  1550
+Wire Wire Line
+	650  1900 750  1900
+Connection ~ 650  1900
+Wire Wire Line
+	650  1900 650  2000
+$Comp
+L Device:R R3
+U 1 1 61803E80
+P 1800 1900
+F 0 "R3" V 2007 1900 50  0000 C CNN
+F 1 "1k" V 1916 1900 50  0000 C CNN
+F 2 "" V 1730 1900 50  0001 C CNN
+F 3 "~" H 1800 1900 50  0001 C CNN
+	1    1800 1900
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 6180C3B0
+P 1800 1550
+F 0 "R2" V 2007 1550 50  0000 C CNN
+F 1 "1k" V 1916 1550 50  0000 C CNN
+F 2 "" V 1730 1550 50  0001 C CNN
+F 3 "~" H 1800 1550 50  0001 C CNN
+	1    1800 1550
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 6180C682
+P 1800 1200
+F 0 "R1" V 2007 1200 50  0000 C CNN
+F 1 "1k" V 1916 1200 50  0000 C CNN
+F 2 "" V 1730 1200 50  0001 C CNN
+F 3 "~" H 1800 1200 50  0001 C CNN
+	1    1800 1200
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R0
+U 1 1 6180CA1A
+P 1800 850
+F 0 "R0" V 2007 850 50  0000 C CNN
+F 1 "1k" V 1916 850 50  0000 C CNN
+F 2 "" V 1730 850 50  0001 C CNN
+F 3 "~" H 1800 850 50  0001 C CNN
+	1    1800 850 
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	2050 850  1950 850 
+Wire Wire Line
+	1950 1200 2050 1200
+Connection ~ 2050 850 
+Wire Wire Line
+	2050 1900 1950 1900
+Wire Wire Line
+	1950 1550 2050 1550
+Wire Wire Line
+	1150 850  1250 850 
+Wire Wire Line
+	1150 1200 1250 1200
+Wire Wire Line
+	1150 1550 1250 1550
+Wire Wire Line
+	1150 1900 1250 1900
+Wire Wire Line
+	1300 750  1250 750 
+Wire Wire Line
+	1250 750  1250 850 
+Connection ~ 1250 850 
+Wire Wire Line
+	1250 850  1650 850 
+Wire Wire Line
+	1300 1100 1250 1100
+Wire Wire Line
+	1250 1100 1250 1200
+Connection ~ 1250 1200
+Wire Wire Line
+	1250 1200 1650 1200
+Wire Wire Line
+	1300 1450 1250 1450
+Wire Wire Line
+	1250 1450 1250 1550
+Connection ~ 1250 1550
+Wire Wire Line
+	1250 1550 1650 1550
+Connection ~ 1250 1900
+Wire Wire Line
+	1250 1900 1650 1900
+Text GLabel 2650 850  0    50   Input ~ 0
+ARD_D4
+Text GLabel 2650 1200 0    50   Input ~ 0
+ARD_D5
+Text GLabel 2650 1550 0    50   Input ~ 0
+ARD_D6
+Text GLabel 2650 1900 0    50   Input ~ 0
+ARD_D7
+$Comp
+L Device:R R4
+U 1 1 6182D2A7
+P 2950 850
+F 0 "R4" V 2743 850 50  0000 C CNN
+F 1 "???" V 2834 850 50  0000 C CNN
+F 2 "" V 2880 850 50  0001 C CNN
+F 3 "~" H 2950 850 50  0001 C CNN
+	1    2950 850 
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R5
+U 1 1 6182E2EB
+P 2950 1200
+F 0 "R5" V 2743 1200 50  0000 C CNN
+F 1 "???" V 2834 1200 50  0000 C CNN
+F 2 "" V 2880 1200 50  0001 C CNN
+F 3 "~" H 2950 1200 50  0001 C CNN
+	1    2950 1200
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R6
+U 1 1 6182EB3A
+P 2950 1550
+F 0 "R6" V 2743 1550 50  0000 C CNN
+F 1 "???" V 2834 1550 50  0000 C CNN
+F 2 "" V 2880 1550 50  0001 C CNN
+F 3 "~" H 2950 1550 50  0001 C CNN
+	1    2950 1550
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R R7
+U 1 1 6182F140
+P 2950 1900
+F 0 "R7" V 2743 1900 50  0000 C CNN
+F 1 "???" V 2834 1900 50  0000 C CNN
+F 2 "" V 2880 1900 50  0001 C CNN
+F 3 "~" H 2950 1900 50  0001 C CNN
+	1    2950 1900
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2650 850  2800 850 
+Wire Wire Line
+	2800 1200 2650 1200
+Wire Wire Line
+	2800 1550 2650 1550
+Wire Wire Line
+	2650 1900 2800 1900
+$Comp
+L power:GND #PWR?
+U 1 1 61831AB4
+P 3600 2000
+F 0 "#PWR?" H 3600 1750 50  0001 C CNN
+F 1 "GND" H 3605 1827 50  0000 C CNN
+F 2 "" H 3600 2000 50  0001 C CNN
+F 3 "" H 3600 2000 50  0001 C CNN
+	1    3600 2000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:LED D0
+U 1 1 6183A3CC
+P 3350 850
+F 0 "D0" H 3343 595 50  0000 C CNN
+F 1 "LED_RED" H 3343 686 50  0000 C CNN
+F 2 "" H 3350 850 50  0001 C CNN
+F 3 "~" H 3350 850 50  0001 C CNN
+	1    3350 850 
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:LED D1
+U 1 1 6183CBFB
+P 3350 1200
+F 0 "D1" H 3343 945 50  0000 C CNN
+F 1 "LED_RED" H 3343 1036 50  0000 C CNN
+F 2 "" H 3350 1200 50  0001 C CNN
+F 3 "~" H 3350 1200 50  0001 C CNN
+	1    3350 1200
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:LED D2
+U 1 1 6183D788
+P 3350 1550
+F 0 "D2" H 3343 1295 50  0000 C CNN
+F 1 "LED_RED" H 3343 1386 50  0000 C CNN
+F 2 "" H 3350 1550 50  0001 C CNN
+F 3 "~" H 3350 1550 50  0001 C CNN
+	1    3350 1550
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:LED D3
+U 1 1 6183E4E9
+P 3350 1900
+F 0 "D3" H 3343 1645 50  0000 C CNN
+F 1 "LED_RED" H 3343 1736 50  0000 C CNN
+F 2 "" H 3350 1900 50  0001 C CNN
+F 3 "~" H 3350 1900 50  0001 C CNN
+	1    3350 1900
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	3200 1900 3100 1900
+Wire Wire Line
+	3100 1550 3200 1550
+Wire Wire Line
+	3200 1200 3100 1200
+Wire Wire Line
+	3100 850  3200 850 
+Wire Wire Line
+	3600 2000 3600 1900
+Wire Wire Line
+	3600 850  3500 850 
+Wire Wire Line
+	3500 1200 3600 1200
+Connection ~ 3600 1200
+Wire Wire Line
+	3600 1200 3600 850 
+Wire Wire Line
+	3600 1550 3500 1550
+Connection ~ 3600 1550
+Wire Wire Line
+	3600 1550 3600 1200
+Wire Wire Line
+	3500 1900 3600 1900
+Connection ~ 3600 1900
+Wire Wire Line
+	3600 1900 3600 1550
+Wire Wire Line
+	2050 800  2050 850 
+Wire Wire Line
+	2050 750  2050 850 
+Wire Wire Line
+	1250 1800 1250 1900
+Wire Wire Line
+	1300 1800 1250 1800
+Text GLabel 1300 1800 2    50   Input ~ 0
+ARD_D3
+Wire Wire Line
+	650  1200 650  1550
+Connection ~ 650  1550
+Wire Wire Line
+	650  1550 650  1900
+Wire Wire Line
+	650  850  650  1200
+Connection ~ 650  1200
+Wire Wire Line
+	2050 850  2050 1200
+Connection ~ 2050 1200
+Wire Wire Line
+	2050 1200 2050 1550
+Connection ~ 2050 1550
+Wire Wire Line
+	2050 1550 2050 1900
+$EndSCHEMATC
