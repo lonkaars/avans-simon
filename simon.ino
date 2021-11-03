@@ -1,10 +1,10 @@
-/**
- * Simon game based on this wikipedia article:
- * https://en.wikipedia.org/wiki/Simon_(game)
- */
+#include <math.h>
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 #define CFG_DEBOUNCE_DELAY 200
 #define CFG_MAX_GAME_LEN 512
+#define CFG_DIFF_MIN 50
+#define CFG_DIFF_CURVE 15
 
 #define PINOUT_LED_BLU 0
 #define PINOUT_SWC_BLU 1
@@ -86,14 +86,15 @@ void setup() {
 	pinMode(PINOUT_SWC_YLW, INPUT_PULLUP);
 	pinMode(PINOUT_SWC_BLU, INPUT_PULLUP);
 
-	pinMode(PINOUT_NOISE, INPUT); // random noise channel for RNG
+	pinMode(PINOUT_NOISE, INPUT); // random noise voor RNG
 	randomSeed(analogRead(PINOUT_NOISE));
 
 	delay(500);
 
 	boot_animation();
 
-	// wait for user to press start
+	// laat de groene led knipperen tot de gebruiker die knop
+	// indrukt om het spel te laten beginnen
 	for (;;) {
 		digitalWrite(PINOUT_LED_GRE, millis() % 1000 < 500);
 		if(!digitalRead(PINOUT_SWC_GRE)) break;
@@ -107,15 +108,31 @@ void setup() {
 	simon_says();
 }
 
+/**
+ * @brief difficulty calculator
+ * 
+ * de uitvoer van deze functie wordt gebruikt om de timing van de simon_says()
+ * functie te berekenen. de timing is 2 * x voor de 'aan' periode, en x voor de
+ * tijd tussen de 'aan' periode's. x is de uitvoer van deze functie in
+ * milliseconden.
+ */
 unsigned int difficulty() {
-	return 100;
+	/**
+	 * resultaat van max(200 * 0.5^(x/a), b) waar
+	 * x = lengte van huidige combinatie
+	 * a = hoe snel het spel lastiger wordt
+	 * en b = maximale lastigheid
+	 *
+	 * lagere waardes = lastiger
+	 */
+	return MAX((int)(200 * pow(0.5, (float) turn_number / CFG_DIFF_CURVE)), CFG_DIFF_MIN);
 }
 
+/** @brief laat de combinatie zien die moet worden nagespeeld */
 void simon_says() {
 	ignore_input = true;
-	for (int i = 0; i <= turn_number; i++) {
+	for (int i = 0; i <= turn_number; i++)
 		beep_quarter(combination[i]);
-	}
 	ignore_input = false;
 }
 
@@ -141,6 +158,7 @@ void bn_scan() {
 
 void bad_press_routine() {
 	ignore_input = true;
+
 	unsigned long until = millis() + 2e3;
 	while (millis() < until) {
 		unsigned long offset = until - millis();
@@ -154,18 +172,31 @@ void bad_press_routine() {
 	enter_number = 0;
 	generate_combination();
 	delay(200);
+
 	simon_says();
+
 	ignore_input = false;
 }
 
+/** @brief wordt uitgevoerd voor elke toetsaanslag */
 void check_press(int index) {
+	// verkeerde toets ingedrukt
 	if (combination[enter_number] != index) {
 		bad_press_routine();
 		return;
 	}
 
+	// als alle toetsen in de goede volgorde zijn ingetoetst
 	if(enter_number == turn_number) {
 		turn_number++;
+
+		// zorg dat er geen index out of bounds error kan gebeuren door uit te gaan
+		if (turn_number == CFG_MAX_GAME_LEN) {
+			all_leds(LOW);
+			for(;;) {}
+		}
+
+		// laat de nieuwe combinatie zien
 		enter_number = 0;
 		delay(200);
 		all_leds(LOW);
@@ -174,24 +205,25 @@ void check_press(int index) {
 		return;
 	}
 
+	// als nog niet alle toetsen ingetoetst zijn
 	enter_number++;
 }
 
 void bn_onevent(bn_event ev) {
-	if (ignore_input) return;
-	if (ev.down) {
-		bool bounce = bn_timings[ev.index] + CFG_DEBOUNCE_DELAY > millis();
-		bn_timings[ev.index] = ev.timestamp;
-		if (bounce) return;
-	}
+	// stop gelijk als ignore_input aan is of het een key up event is
+	if (ignore_input || !ev.down) return;
 
-	if (ev.down) {
-		led_set_timeout(ev.index, 200);
-		tone(PINOUT_BUZZ, clockwise_tones[ev.index], 200);
-		ignore_input_for(200);
+	// debounce correctie
+	bool bounce = bn_timings[ev.index] + CFG_DEBOUNCE_DELAY > millis();
+	bn_timings[ev.index] = ev.timestamp;
+	if (bounce) return;
 
-		check_press(ev.index);
-	}
+	// als er een toets ingedrukt wordt
+	led_set_timeout(ev.index, 200);
+	tone(PINOUT_BUZZ, clockwise_tones[ev.index], 200);
+	ignore_input_for(200);
+
+	check_press(ev.index);
 }
 
 void bn_event_gen() {
@@ -208,6 +240,7 @@ void bn_event_gen() {
 	}
 }
 
+/** @brief helper voor timeout variabelen */
 void set_timeout(unsigned char *state_ref, unsigned long *timeout_ref, unsigned long duration_millis) {
 	*timeout_ref = millis() + duration_millis;
 	*state_ref = 1;
@@ -222,6 +255,7 @@ void ignore_input_for(unsigned long duration_millis) {
 	set_timeout(&ignore_input, &ignore_input_timing, duration_millis);
 }
 
+/** @brief update alle timers */
 void timer_update() {
 	unsigned long current_time = millis();
 
