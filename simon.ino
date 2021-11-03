@@ -17,10 +17,10 @@
 #define PINOUT_BUZZ A0
 #define PINOUT_NOISE A1
 
-#define TONE_BLU 329.63
+#define TONE_BLU 659.26
 #define TONE_YLW 277.18
 #define TONE_RED 440.00
-#define TONE_GRE 164.81
+#define TONE_GRE 329.62
 
 const int clockwise_leds[] = { PINOUT_LED_BLU, PINOUT_LED_YLW, PINOUT_LED_GRE, PINOUT_LED_RED };
 const int clockwise_buttons[] = { PINOUT_SWC_BLU, PINOUT_SWC_YLW, PINOUT_SWC_GRE, PINOUT_SWC_RED };
@@ -30,13 +30,15 @@ const int clockwise_tones[] = { TONE_BLU, TONE_YLW, TONE_GRE, TONE_RED };
 unsigned long bn_timings[CFG_BN_COUNT], led_timeouts[CFG_BN_COUNT];
 unsigned char bn_state[CFG_BN_COUNT], bn_state_old[CFG_BN_COUNT], led_state[CFG_BN_COUNT];
 
+unsigned long ignore_input_timing;
+unsigned char ignore_input;
+
 #define QUARTER_TL 0
 #define QUARTER_TR 1
 #define QUARTER_BL 2
 #define QUARTER_BR 3
 
-int turn_number;
-int entered;
+int turn_number, enter_number;
 int combination[CFG_MAX_GAME_LEN];
 
 typedef struct {
@@ -48,6 +50,27 @@ typedef struct {
 void generate_combination() {
 	for (int i = 0; i < CFG_MAX_GAME_LEN; i++)
 		combination[i] = random(4);
+}
+
+void all_leds(unsigned char state) {
+	digitalWrite(PINOUT_LED_BLU, state);
+	digitalWrite(PINOUT_LED_GRE, state);
+	digitalWrite(PINOUT_LED_RED, state);
+	digitalWrite(PINOUT_LED_YLW, state);
+}
+
+void boot_animation() {
+	for (int i = 0; i < 8; i++) {
+		digitalWrite(clockwise_leds[i % 4], HIGH);
+		delay(100);
+		digitalWrite(clockwise_leds[i % 4], LOW);
+	}
+	for (int i = 0; i < 2; i++) {
+		all_leds(HIGH);
+		delay(200);
+		all_leds(LOW);
+		delay(200);
+	}
 }
 
 void setup() {
@@ -65,6 +88,47 @@ void setup() {
 
 	pinMode(PINOUT_NOISE, INPUT); // random noise channel for RNG
 	randomSeed(analogRead(PINOUT_NOISE));
+
+	delay(500);
+
+	boot_animation();
+
+	// wait for user to press start
+	for (;;) {
+		digitalWrite(PINOUT_LED_GRE, millis() % 1000 < 500);
+		if(!digitalRead(PINOUT_SWC_GRE)) break;
+	}
+
+	generate_combination();
+
+	digitalWrite(PINOUT_LED_GRE, 0);
+	delay(500);
+
+	simon_says();
+}
+
+unsigned int difficulty() {
+	return 100;
+}
+
+void simon_says() {
+	ignore_input = true;
+	for (int i = 0; i <= turn_number; i++) {
+		beep_quarter(combination[i]);
+	}
+	ignore_input = false;
+}
+
+void beep_quarter(unsigned char quarter) {
+	unsigned int diff = difficulty();
+
+	digitalWrite(clockwise_leds[quarter], HIGH);
+	tone(PINOUT_BUZZ, clockwise_tones[quarter]);
+	delay(2 * diff);
+
+	digitalWrite(clockwise_leds[quarter], LOW);
+	noTone(PINOUT_BUZZ);
+	delay(diff);
 }
 
 void bn_scan() {
@@ -75,7 +139,46 @@ void bn_scan() {
 		bn_state[i] = !digitalRead(clockwise_buttons[i]);
 }
 
+void bad_press_routine() {
+	ignore_input = true;
+	unsigned long until = millis() + 2e3;
+	while (millis() < until) {
+		unsigned long offset = until - millis();
+		all_leds(offset % 300 < 150);
+		tone(PINOUT_BUZZ, 500 - (offset % 500));
+	}
+	noTone(PINOUT_BUZZ);
+	all_leds(LOW);
+
+	turn_number = 0;
+	enter_number = 0;
+	generate_combination();
+	delay(200);
+	simon_says();
+	ignore_input = false;
+}
+
+void check_press(int index) {
+	if (combination[enter_number] != index) {
+		bad_press_routine();
+		return;
+	}
+
+	if(enter_number == turn_number) {
+		turn_number++;
+		enter_number = 0;
+		delay(200);
+		all_leds(LOW);
+		delay(500);
+		simon_says();
+		return;
+	}
+
+	enter_number++;
+}
+
 void bn_onevent(bn_event ev) {
+	if (ignore_input) return;
 	if (ev.down) {
 		bool bounce = bn_timings[ev.index] + CFG_DEBOUNCE_DELAY > millis();
 		bn_timings[ev.index] = ev.timestamp;
@@ -85,6 +188,9 @@ void bn_onevent(bn_event ev) {
 	if (ev.down) {
 		led_set_timeout(ev.index, 200);
 		tone(PINOUT_BUZZ, clockwise_tones[ev.index], 200);
+		ignore_input_for(200);
+
+		check_press(ev.index);
 	}
 }
 
@@ -102,25 +208,37 @@ void bn_event_gen() {
 	}
 }
 
+void set_timeout(unsigned char *state_ref, unsigned long *timeout_ref, unsigned long duration_millis) {
+	*timeout_ref = millis() + duration_millis;
+	*state_ref = 1;
+}
+
 void led_set_timeout(unsigned int led, unsigned long duration_millis) {
-	led_timeouts[led] = millis() + duration_millis;
-	led_state[led] = 1;
+	set_timeout(&led_state[led], &led_timeouts[led], duration_millis);
 	digitalWrite(clockwise_leds[led], HIGH);
 }
 
-void led_update() {
+void ignore_input_for(unsigned long duration_millis) {
+	set_timeout(&ignore_input, &ignore_input_timing, duration_millis);
+}
+
+void timer_update() {
 	unsigned long current_time = millis();
 
+	// led update
 	for (int i = 0; i < CFG_BN_COUNT; i++) {
 		if (led_timeouts[i] > current_time) continue;
 		if (led_state[i] == 0) continue;
 		led_state[i] = 0;
 		digitalWrite(clockwise_leds[i], LOW);
 	}
+
+	// input ignore mode
+	if (ignore_input == 1 && current_time > ignore_input_timing) ignore_input = 0;
 }
 
 void loop() {
 	bn_scan();
 	bn_event_gen();
-	led_update();
+	timer_update();
 }
