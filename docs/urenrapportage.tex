@@ -1,0 +1,84 @@
+\documentclass[12pt, a4paper, dutch]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{circuitikz}
+\usepackage{float}
+\usepackage{babel}
+\usepackage{siunitx}
+\usepackage{amsmath}
+\usepackage{scalerel}
+\usepackage{csquotes}
+\usepackage{parskip}
+\usepackage{unicode-math}
+\usepackage{fontspec}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{hyperref}
+
+\setmainfont{TeX Gyre Schola}
+\setmathfont{TeX Gyre Schola Math}
+\setmonofont{JetBrainsMono Nerd Font}
+\sisetup{
+	group-separator = {.},
+	output-decimal-marker = {,}
+}
+
+\bigskipamount=7mm
+\medskipamount=4mm
+\parindent=0mm
+
+\begin{document}
+\textbf{Urenrapportage} \hfill \textbf{Loek Le Blansch} (2180996)
+\\\smallskip
+Project Simon\hfill\today
+
+\medskip
+
+Totaal: 15:37:58
+
+{\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{rrrX}
+\toprule
+\textbf{Datum} & \textbf{Tijd} & \textbf{Lengte} & \textbf{Taak}\\
+\midrule
+1 nov. & 8:45  & 0:35:00 & Volgen kickoff presentatie\\
+
+& 9:12    & 0:45:51 & Inlezen over project en schema voor pcb maken in \hbox{KiCad}\\
+
+& 10:07   & 0:10:00 & Forward voltage van de LED's meten\\
+
+& 10:35   & 1:27:00 & Werken aan schema's en weerstandswaarde voor de LED's
+berekenen\\
+
+& 14:45   & 0:45:00 & PCB schema afmaken\\
+
+\midrule
+2 nov. & 7:22    & 0:10:00 & Weerstandswaardes bijwerken in schema's\\
+
+& 8:46    & 3:30:00 & Externe pull-up weerstanden weghalen in PCB schema, schema
+testen op breadboard, en PCB solderen\\
+
+& 14:15   & 0:15:00 & Schema bijwerken zodat deze klopt met de fysieke PCB\\
+
+& 14:30   & 1:22:52 & Software schrijven\\
+
+\midrule
+3 nov. & 8:40    & 1:30:00 & Software afmaken\\
+
+& 10:44   & 0:25:14 & Commentaar toevoegen aan software en difficulty functie
+implementeren\\
+
+& 11:52   & 0:35:05 & Software ontwerp maken\\
+
+\midrule
+4 nov. & 9:40    & 2:17:03 & Software ontwerp afmaken\\
+
+& 12:35   & 1:35:18 & Onderzoek en analyse maken\\
+
+& 14:36 & 0:14:35 & Urenrapportage maken\\
+\bottomrule
+\end{tabularx}
+
+\end{document}
