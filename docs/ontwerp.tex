@@ -49,7 +49,7 @@
 \begin{document}
 
 \begin{center}
-\textbf{Software ontwerp} \hspace{2mm} project Simon \hfill \textbf{Loek Le Blansch} (2180996)
+\textbf{Ontwerp} \hspace{2mm} project Simon \hfill \textbf{Loek Le Blansch} (2180996)
 \\\smallskip
 \today
 \end{center}
@@ -59,7 +59,9 @@
 Dit document maakt gebruik van hyperlinks, dus je kunt klikken op de blokken met
 \emph{benadrukte tekst} om naar de definitie van dat blok te gaan.
 
-\section*{Overzicht}\label{overzicht}
+\section{Software ontwerp}
+
+\subsection*{Overzicht}\label{overzicht}
 \begin{center}
 \begin{tikzpicture}[node distance=1.5cm]
 \node[initial] (initial) at (0,0) {};
@@ -74,7 +76,7 @@ Dit document maakt gebruik van hyperlinks, dus je kunt klikken op de blokken met
 \end{center}
 
 
-\section*{Initialisatie}\label{init}
+\subsection*{Initialisatie}\label{init}
 \begin{center}
 \begin{tikzpicture}[node distance=1.5cm]
 \node[initial] (initial) at (0,0) {};
@@ -108,7 +110,7 @@ Dit document maakt gebruik van hyperlinks, dus je kunt klikken op de blokken met
 \end{center}
 
 
-\section*{Loop}\label{loop}
+\subsection*{Loop}\label{loop}
 \begin{center}
 \begin{tikzpicture}[node distance=2cm]
 \node[initial] (initial) at (0,0) {};
@@ -130,7 +132,7 @@ Dit document maakt gebruik van hyperlinks, dus je kunt klikken op de blokken met
 \end{center}
 
 
-\section*{Knoppen scan}\label{bnscan}
+\subsection*{Knoppen scan}\label{bnscan}
 \begin{center}
 \begin{tikzpicture}[node distance=1.5cm]
 
@@ -172,7 +174,7 @@ Dit document maakt gebruik van hyperlinks, dus je kunt klikken op de blokken met
 \end{center}
 
 
-\section*{Event generator}\label{onbn}
+\subsection*{Event generator}\label{onbn}
 \begin{center}
 \begin{tikzpicture}[node distance=1.5cm]
 \node[initial] (initial) at (0,0) {};
@@ -213,7 +215,7 @@ Dit document maakt gebruik van hyperlinks, dus je kunt klikken op de blokken met
 \end{center}
 
 
-\section*{Event handler}\label{bneventhandler}
+\subsection*{Event handler}\label{bneventhandler}
 \begin{center}
 \begin{tikzpicture}[node distance=2.5cm]
 
@@ -250,7 +252,7 @@ Dit document maakt gebruik van hyperlinks, dus je kunt klikken op de blokken met
 \end{center}
 
 
-\section*{Controleer of de knop goed is}\label{checkkeypress}
+\subsection*{Controleer of de knop goed is}\label{checkkeypress}
 \begin{center}
 \begin{tikzpicture}[node distance=1.5cm]
 
@@ -297,7 +299,7 @@ Dit document maakt gebruik van hyperlinks, dus je kunt klikken op de blokken met
 \end{center}
 
 
-\section*{Verkeerde knop routine}\label{badpressroutine}
+\subsection*{Verkeerde knop routine}\label{badpressroutine}
 \begin{center}
 \begin{tikzpicture}[node distance=1.5cm]
 
@@ -326,5 +328,23 @@ Dit document maakt gebruik van hyperlinks, dus je kunt klikken op de blokken met
 \end{tikzpicture}
 \end{center}
 
+\section{Hardware}
+
+\subsection{Schema}
+
+\begin{center}
+\includegraphics[
+	clip,
+	trim=21mm 83mm 197mm 13mm,
+	width=9cm
+]{./schema.pdf}
+\end{center}
+
+\subsection{PCB}
+\begin{center}
+\includegraphics[
+	width=9cm
+]{./pcb.pdf}
+\end{center}
 
 \end{document}
