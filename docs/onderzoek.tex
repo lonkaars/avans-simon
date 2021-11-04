@@ -1,0 +1,148 @@
+\documentclass[12pt, a4paper, dutch]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{circuitikz}
+\usepackage{float}
+\usepackage{babel}
+\usepackage{siunitx}
+\usepackage{amsmath}
+\usepackage{scalerel}
+\usepackage{csquotes}
+\usepackage{parskip}
+\usepackage{unicode-math}
+\usepackage{fontspec}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{color}
+\usepackage{hyperref}
+
+\setmainfont{TeX Gyre Schola}
+\setmathfont{TeX Gyre Schola Math}
+\setmonofont{JetBrainsMono Nerd Font}
+\sisetup{
+	group-separator = {.},
+	output-decimal-marker = {,}
+}
+
+\pgfplotsset{compat=newest}
+
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{arrows.meta,arrows}
+\usetikzlibrary{positioning}
+\tikzset{
+	initial/.style={circle, fill},
+	final/.style={solid, double=white, circle, fill, thick, draw},
+	decision/.style={diamond, black, draw},
+	action/.style={rectangle, draw, rounded corners, align=center},
+	arrow/.style={draw, -{Latex[length=3mm]}, thick, rounded corners}
+}
+
+\bigskipamount=7mm
+\medskipamount=4mm
+\parindent=0mm
+
+\begin{document}
+\textbf{Onderzoek en analyse} \hfill \textbf{Loek Le Blansch} (2180996)
+\\\smallskip
+Project Simon\hfill\today
+
+\medskip
+
+\section{Blokschema}
+
+\tikzstyle{block} = [draw, rectangle, align=center,
+    minimum height=3em, minimum width=6em]
+
+\begin{center}
+\begin{tikzpicture}[node distance=4cm]
+    \node [block] (buttons) {Drukknoppen};
+    \node [block, right of = buttons, minimum height=7em] (arduino)
+			{Besturingsmodule\\(Arduino)};
+    \node [block, right of = arduino, yshift=-9mm] (leds) {Led's};
+    \node [block, right of = arduino, yshift=9mm] (buzzer) {Buzzer};
+
+    \draw [->] (arduino.25) |- (buzzer.180);
+		\draw[-{Triangle[width=12pt,length=6pt]}, line width=6pt]
+			(arduino.335) -- (leds.180);
+		\draw[-{Triangle[width=12pt,length=6pt]}, line width=6pt](buttons) -- (arduino);
+\end{tikzpicture}
+\end{center}
+
+\section{Functiebeschrijving}
+
+\fontsize{9}{11.5}\selectfont
+{\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{lp{0.17\textwidth}XX}
+\toprule
+Onderdeel & Doel & Opbouw & Functie\\
+\midrule
+Drukknoppen &
+Gebruikersinvoer detecteren &
+De drukknop is een klein vierkant onderdeel met een uitstekend blauw cylindervorming
+gedeelte &
+De drukknop heeft interne contacten en een beweegbaar gedeelte, die de contacten
+elektrisch verbinden wanner je hem indrukt\\
+\midrule
+Besturingsmodule &
+Gebruikersinvoer en spelcode verwerken &
+De besturingsmodule bestaat uit een Arduino printplaat, met bovenop een shield waar
+de rest van de onderdelen op zitten om het spel te laten werken &
+De Arduino draait code die door de gebruiker is geschreven. De shield bevat de nodige
+aansluitingen om een werkend spel te maken\\
+\midrule
+Buzzer &
+Herrie maken &
+De buzzer is een klein zwart schijfje die aan de rand van de besturingsmodule zit &
+De zoemer heeft een intern diafragma met een pi\"ezo-kristal dat trilt wanneer er
+wisselspanning doorheen gaat\\
+\midrule
+Led's &
+Gebruiker visuele signalen en bevestiging geven &
+Een led lijkt op een lange speldenknop gemaakt van doorzichtig gekleurd plastic &
+De led is een halfgeleider die oplicht wanneer er spanning in de goede richting
+doorheen loopt\\
+\bottomrule
+\end{tabularx}
+
+\normalsize
+
+\section{Spelverloop}
+
+Eerst start het spel op, daarna wordt de opstartanimatie weergeven. De
+opstartanimatie bestaat uit de lampjes die met de klok mee knipperen.
+
+Vervolgens gaat het groene lampje knipperen tot de gebruiker deze indrukt. Na dat de
+gebruiker de groene knop heeft ingedrukt begint het spel.
+
+Het patroon wordt willekeurig gekozen door de Arduino. Om herhalende patronen te
+vermijden wordt een van de analoge pins die niet aangesloten is, gebruikt om de
+willekeurige-getalgenerator in de Arduino in te stellen. Dit garandeert dat de
+patronen elke keer anders zijn.
+
+Het spel laat elke ronde het patroon zien door het lampje voor die kleur op te
+lichten, en een toon af te spelen terwijl dat lampje aan is. Elke kleur heeft een
+eigen toonhoogte. Na dat het patroon aan de gebruiker is getoond, is het de bedoeling
+dat de gebruiker dit patroon in dezelfde volgorde intoetst. Na elke ronde wordt het
+patroon verlengd met 1.
+
+Als de gebruiker een fout maakt, gaan alle lampjes even knipperen en speelt er een
+geluid af om aan te duiden dat de gebruiker `verloren' heeft. Hierna wordt het spel
+gereset, door een nieuw patroon te maken en weer bij ronde 1 te beginnen.
+
+De snelheid waarop het spel het patroon laat zien aan het begin van elke ronde wordt
+met de volgende formule bepaald:
+
+\[
+	D=\max(200 * 0.5^{\frac{r}{a}}, b)
+\]
+
+Waar $D$ de moeilijkheidsfactor, $r$ de huidige ronde, $a$ de snelheid waarmee het
+spel lastiger word, en $b$ de maximale moeilijkheid is. $D$ wordt gebruikt om de
+timing van de patroon-toon functie uit te rekenen, waar $2*D$ de tijd is in
+milliseconden is hoe lang elk lampje aan is, en $1*D$ de tijd daartussen is. In de
+standaardconfiguratie zijn de waardes $a=15$ en $b=50$.
+
+\end{document}

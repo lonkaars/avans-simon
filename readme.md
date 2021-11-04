@@ -11,7 +11,6 @@ deze keer doe ik 'm alleen, dus alles staat nu hier (met documentatie enzo)
 - [x] software
 - [x] hardware (+schema's)
 - [x] software ontwerp (activiteitsdiagram)
-- [ ] blokschema
-- [ ] functiebeschrijving
+- [x] blokschema, functiebeschrijving, en spelverloop
 - [ ] infographic
 - [ ] urenrapportage
